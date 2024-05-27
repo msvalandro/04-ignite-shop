@@ -38,12 +38,7 @@ export default function Home({ products }: HomeProps) {
 
           <footer>
             <strong>{product.name}</strong>
-            <span>
-              {product.price.toLocaleString('pt-BR', {
-                style: 'currency',
-                currency: 'BRL',
-              })}
-            </span>
+            <span>{product.price}</span>
           </footer>
         </Product>
       ))}
@@ -58,11 +53,15 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const products = data.map((product) => {
     const price = product.default_price as Stripe.Price
+    const formattedPrice = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(price.unit_amount ? price.unit_amount / 100 : 999)
 
     return {
       id: product.id,
       name: product.name,
-      price: price.unit_amount ? price.unit_amount / 100 : 0,
+      price: formattedPrice,
       imageUrl: product.images[0],
     }
   })
