@@ -6,7 +6,15 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const priceId = 'price_1PL6VqGM67sDUxTBeUSL189h'
+  const { priceId } = req.body
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed.' })
+  }
+
+  if (!priceId) {
+    return res.status(400).json({ price: 'Price not found.' })
+  }
 
   const successUrl = `${process.env.NEXT_URL}/success`
   const cancelUrl = `${process.env.NEXT_URL}/cancel`
